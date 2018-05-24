@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Parser</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/additory-handler.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="hypercomments_widget"></div>
+        <script src="js/basic-functions.js"></script>
+        <script src="js/additory-handler.js"></script>
+        <script type="text/javascript">
+        _hcwp = window._hcwp || [];
+        _hcwp.push({widget:"Stream", widget_id: 98905, title: 'Air.Live', href: 'http://air.yaroslav-samoylov.com/1', pagination: 1, social: "google, facebook, vk, odnoklassniki", callback: function(app, init) {
+            var handler = new AdditoryHandler();
+            handler.Application(app);
+            handler.ProductID(571);
+            handler.initilize();
+            }
+        });
+        (function() {
+        if("HC_LOAD_INIT" in window)return;
+        HC_LOAD_INIT = true;
+        var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+        var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+        hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/98905/"+lang+"/widget.js";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hcc, s.nextSibling);
+        })();
+        </script>
+    </body>
+</html>

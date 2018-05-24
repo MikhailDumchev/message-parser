@@ -154,7 +154,8 @@ function AdditoryHandler() {
                     }
                 }
             } else {
-                if (parseMessage(packet.text)) {
+                console.log(packet.text.length + "ss");
+                if (parseMessage(packet.text) && packet.text.length > 5) {
                     data.initialMessage = packet.text;
                     data.initialName = packet.nick;
                     //Добавление сообщения о принятии заказа;

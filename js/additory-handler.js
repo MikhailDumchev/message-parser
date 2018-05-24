@@ -154,7 +154,6 @@ function AdditoryHandler() {
                     }
                 }
             } else {
-                console.log(packet.text.length + "ss");
                 if (parseMessage(packet.text) && packet.text.length > 5) {
                     data.initialMessage = packet.text;
                     data.initialName = packet.nick;

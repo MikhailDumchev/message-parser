@@ -23,12 +23,23 @@ function AdditoryHandler() {
     var application = new Object();
     var textFieldContainer = new Object();
     var commentsContainer = new Object();
+    var commentNumber = 0;
+    var template = new Object();
+    this.Template = function(value) {
+        if (!arguments.length) return template;
+        else template = value;
+    };
+    var templateData = {
+        "src": "http://static.hypercomments.com/data/avatars/9496804/avatar",
+        "name": "Cлужба Поддержки Ярослава Самойлова",
+        "message": "Благодарим за обращение, ассистент свяжется с Вами))"
+    };
     var plug = new Object();
     this.Application = function(value) {
         if (!arguments.length) return application;
         else application = value;
     };
-    this.initilize = function() {
+    this.initialize = function() {
         var additoryVariable = selectElementByClassName(textFieldContainerClassName);
         if (additoryVariable.status) {
             textFieldContainer = additoryVariable.element.parentNode;
@@ -91,7 +102,7 @@ function AdditoryHandler() {
         if (className) notification.className = className;
         else notification.className = notificationClassName;
         var textNode = document.createElement("p");
-        textNode.innerHTML = "Ваша заявка принята!<br/> Наш менеджер свяжется с Вами.";
+        textNode.innerHTML = "Ваша заявка принята!<br/> Наш ассистент свяжется с Вами.";
         var button = document.createElement("span");
         notification.appendChild(textNode);
         notification.appendChild(button);
@@ -121,13 +132,20 @@ function AdditoryHandler() {
         application.on("streamMessage", function(packet) {
             var data = new Object();
             var phoneNumbers = new Array();
+            //Если сообщение отправил пользователь;
             if (packet.is_resp) {
                 appendPlug();
                 timer();
                 if (packet.text.length) {
                     console.log(packet);
                     phoneNumbers = parseMessage(packet.text);
+                    console.log(phoneNumbers);
                     if (phoneNumbers.length) {
+                        data.initialMessage = packet.text;
+                        data.initialName = packet.nick;
+                        //Добавление сообщения о принятии заказа;
+                        appendReply(data);
+                        data = new Object();
                         data.id = packet.id;
                         data.email = packet.email;
                         data.name = packet.nick;
@@ -135,8 +153,44 @@ function AdditoryHandler() {
                         sendRequest(data);
                     }
                 }
+            } else {
+                if (parseMessage(packet.text)) {
+                    data.initialMessage = packet.text;
+                    data.initialName = packet.nick;
+                    //Добавление сообщения о принятии заказа;
+                    appendReply(data);
+                }
             }
         });            
+    };
+    var getTemplate = function(data) {
+        "use strict";
+        return template.getTemplate(data);
+    };
+    var appendReply = function(data) {
+        templateData.id = commentNumber;
+        templateData.time = Date.now();
+        templateData.initialName = data.initialName;
+        templateData.initialMessage = data.initialMessage;
+        commentsContainer.insertAdjacentHTML("afterbegin", getTemplate(templateData));
+        animateHeightIncrease();
+        commentNumber++;
+    };
+    /*
+     * Анимация при добавлении авто-комментария;
+     */
+    var animateHeightIncrease = function() {
+        "use strict";
+        var comment = document.getElementById("hcm-" + commentNumber);
+        var height = parseFloat(window.getComputedStyle(comment, "").height);
+        comment.style.cssText = "height: 0px; transition: height 0.2s !important; -webkit-transition: height 0.2s !important; overflow: hidden; opacity: 0;";
+        window.setTimeout(function() {
+            comment.style.opacity = 1;
+            comment.style.height = height + "px";
+            comment.addEventListener("transitionend", handleEvent, false);
+            comment.addEventListener("webkitTransitionEnd", handleEvent, false);
+            comment.addEventListener("otransitionend", handleEvent, false);
+        }.bind(this), 1000);
     };
     /*
      * Метод отвечает за проверку текущего символа на его соответсвие цифре;
